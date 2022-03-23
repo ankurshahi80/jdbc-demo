@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+group 'com.revature'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation 'org.postgresql:postgresql:42.3.3'
+    // https://mvnrepository.com/artifact/io.javalin/javalin
+    implementation 'io.javalin:javalin:4.4.0'
+    // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.4'
+
+
+}
+
+test {
+    useJUnitPlatform()
+}
