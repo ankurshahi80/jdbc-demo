@@ -3,14 +3,32 @@ package com.revature.dao;
 import com.revature.model.Student;
 import com.revature.utility.ConnectionUtility;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDao {
+
+    public Student addStudent(Student student) throws SQLException {
+        try(Connection con = ConnectionUtility.getConnection()){
+            String sql = "INSERT INTO students (first_name, last_name, age)" +
+                    "VALUES(?,?,?)";
+            PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1,student.getFirstName());
+            pstmt.setString(2, student.getLastName());
+            pstmt.setInt(3,student.getAge());
+
+            pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            rs.next();
+            int generatedId = rs.getInt("id");
+
+            Student newStudent = getStudentById(generatedId);
+
+            return newStudent;
+        }
+
+    }
 
     public List<Student> getAllStudents() throws SQLException {
         List<Student> students = new ArrayList<>();
@@ -52,5 +70,40 @@ public class StudentDao {
             }
         }
         return null;
+    }
+
+    public Student updateStudent(Student student) throws SQLException {
+        try(Connection con = ConnectionUtility.getConnection()){
+            String sql = "UPDATE students " +
+                    "SET" +
+                    "first_name = ?, " +
+                    "last_name = ?, " +
+                    "age = ? " +
+                    "WHERE id = ?";
+
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1,student.getFirstName());
+            pstmt.setString(2, student.getLastName());
+            pstmt.setInt(3,student.getAge());
+
+            pstmt.executeUpdate();
+        }
+        return getStudentById(student.getId());
+    }
+
+    public boolean deleteStudentById(int id) throws SQLException {
+
+        try(Connection con = ConnectionUtility.getConnection()){
+            String sql = "DELETE FROM students WHERE id =?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1,id);
+
+            int numberOfRecordsDeleted = pstmt.executeUpdate();
+
+            if (numberOfRecordsDeleted == 1){
+                return true;
+            }
+        }
+        return false;
     }
 }
