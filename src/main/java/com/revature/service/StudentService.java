@@ -3,12 +3,15 @@ package com.revature.service;
 import com.revature.dao.StudentDao;
 import com.revature.exception.StudentNotFoundException;
 import com.revature.model.Student;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class StudentService {
 
+    private static Logger logger = LoggerFactory.getLogger(StudentService.class);
     private StudentDao studentDao;
 
     public StudentService() {
