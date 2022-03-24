@@ -1,6 +1,7 @@
 package com.revature.main;
 
 import com.revature.controller.Controller;
+import com.revature.controller.ExceptionController;
 import com.revature.controller.StudentController;
 
 import io.javalin.Javalin;
@@ -9,7 +10,7 @@ public class Driver {
     public static void main(String[] args) {
         Javalin app = Javalin.create();
 
-        map(app, new StudentController());
+        map(app, new StudentController(), new ExceptionController());
 
         app.start();
     }

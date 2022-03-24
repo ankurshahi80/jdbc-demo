@@ -16,7 +16,7 @@ public class StudentController implements Controller{
     public StudentController() {
         this.studentService = new StudentService();
     }
-
+// This lambda will implicitly have "throws Exceptions" based on the functional interface
     private Handler getAllStudents = (ctx) ->{
        List<Student> students = studentService.getAllStudents();
        ctx.json(students);
@@ -24,20 +24,8 @@ public class StudentController implements Controller{
 
     private Handler getStudentById = (ctx)->{
         String id = ctx.pathParam("id");
-
-        try {
-            Student student = studentService.getStudentById(id);
-            ctx.json(student);
-        } catch (StudentNotFoundException e){
-            ctx.json(e.getMessage());
-            ctx.status(404);// Student not found
-        } catch (IllegalArgumentException e){
-            ctx.json(e.getMessage());
-            ctx.status(400); // Bad request
-        }
-
-
-
+        Student student = studentService.getStudentById(id);
+        ctx.json(student);
     };
 
     @Override

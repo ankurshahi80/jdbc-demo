@@ -32,7 +32,7 @@ public class StudentService {
             return student;
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("Please enter student id as integer only.");
+            throw new IllegalArgumentException("Student id must be a valid integer only.");
         }
 
 
