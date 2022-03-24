@@ -42,4 +42,49 @@ public class StudentService {
             throw new IllegalArgumentException("Student id must be a valid integer only.");
         }
     }
+
+    public Student addStudent(Student studentToAdd) throws SQLException {
+
+        validateStudentInformation(studentToAdd);
+
+        Student newStudent = studentDao.addStudent(studentToAdd);
+        return newStudent;
+    }
+
+    public Student updateStudent(String sId, Student studentBody) throws SQLException, StudentNotFoundException {
+        try {
+            int intId = Integer.parseInt(sId);
+
+            if (studentDao.getStudentById(intId) == null) {
+                throw new StudentNotFoundException("User is trying to edit a " +
+                        "Student that does not exist. " +
+                        "Student with id " + intId + " not found.");
+            }
+
+            validateStudentInformation(studentBody);
+
+            studentBody.setId(intId);
+            Student updatedStudent = studentDao.updateStudent(studentBody);
+            return updatedStudent;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Id provided must be a valid integer.");
+        }
+    }
+
+    public void validateStudentInformation(Student s){
+        s.setFirstName(s.getFirstName().trim());
+        s.setLastName(s.getLastName().trim());
+
+        if(!s.getFirstName().matches("[a-zA-Z]+")){
+            throw new IllegalArgumentException("First name must only have alphabetical characters. First name input was " + s.getFirstName() + ".");
+        }
+
+        if(!s.getLastName().matches("[a-zA-Z]+")){
+            throw new IllegalArgumentException("Last name must only have alphabetical characters. Last name input was " + s.getLastName());
+        }
+
+        if(s.getAge() < 4){
+            throw new IllegalArgumentException("Must be 4 years or over. Age provided was " + s.getAge());
+        }
+    }
 }

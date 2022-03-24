@@ -75,8 +75,7 @@ public class StudentDao {
     public Student updateStudent(Student student) throws SQLException {
         try(Connection con = ConnectionUtility.getConnection()){
             String sql = "UPDATE students " +
-                    "SET" +
-                    "first_name = ?, " +
+                    "SET first_name = ?, " +
                     "last_name = ?, " +
                     "age = ? " +
                     "WHERE id = ?";
@@ -85,6 +84,7 @@ public class StudentDao {
             pstmt.setString(1,student.getFirstName());
             pstmt.setString(2, student.getLastName());
             pstmt.setInt(3,student.getAge());
+            pstmt.setInt(4,student.getId());
 
             pstmt.executeUpdate();
         }

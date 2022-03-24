@@ -28,9 +28,27 @@ public class StudentController implements Controller{
         ctx.json(student);
     };
 
+    private Handler addStudent = (ctx)->{
+        Student studentToAdd = ctx.bodyAsClass(Student.class);
+        Student newStudent = studentService.addStudent(studentToAdd);
+        ctx.status(201); // 201 CREATED
+        ctx.json(newStudent);
+    };
+
+    private Handler updateStudent = (ctx) -> {
+        Student studentBody = ctx.bodyAsClass(Student.class);
+        String sId = ctx.pathParam("id");
+
+        Student updatedStudent = studentService.updateStudent(sId, studentBody);
+        ctx.status(200);
+        ctx.json(updatedStudent);
+    };
+
     @Override
     public void mapEndPoints(Javalin app) {
         app.get("/students",getAllStudents);
         app.get("/students/{id}",getStudentById);
+        app.post("/students",addStudent);
+        app.put("/students/{id}",updateStudent);
     }
 }
