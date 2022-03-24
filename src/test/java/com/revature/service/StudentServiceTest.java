@@ -1,6 +1,7 @@
 package com.revature.service;
 
 import com.revature.dao.StudentDao;
+import com.revature.exception.StudentNotFoundException;
 import com.revature.model.Student;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -39,8 +41,22 @@ public class StudentServiceTest {
 //        System.out.println(students);
     }
 
+//    Positive test is also known as the "Happy path". The user is utilizing this method correctly
     @Test
-    public void testGetStudentById_positiveTest(){
-        
+    public void testGetStudentById_positiveTest() throws SQLException, StudentNotFoundException {
+//        Arrange
+        StudentDao mockDao = mock(StudentDao.class);
+
+//        mocking the return value for id 1
+        Student expected = new Student(1, "John", "Doe", 41);
+        when(mockDao.getStudentById(eq(1))).thenReturn(expected);
+
+        StudentService studentService = new StudentService(mockDao);
+
+//        Act
+        Student actual = studentService.getStudentById("1");
+
+//         Assert
+        Assertions.assertEquals(expected, actual);
     }
 }
