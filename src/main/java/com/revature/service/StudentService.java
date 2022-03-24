@@ -38,9 +38,5 @@ public class StudentService {
             e.printStackTrace();
             throw new IllegalArgumentException("Student id must be a valid integer only.");
         }
-
-
-
-
     }
 }

@@ -10,7 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.eq;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -43,7 +44,7 @@ public class StudentServiceTest {
 
 //    Positive test is also known as the "Happy path". The user is utilizing this method correctly
     @Test
-    public void testGetStudentById_positiveTest() throws SQLException, StudentNotFoundException {
+    public void test_getStudentById_positiveTest() throws SQLException, StudentNotFoundException {
 //        Arrange
         StudentDao mockDao = mock(StudentDao.class);
 
@@ -58,5 +59,57 @@ public class StudentServiceTest {
 
 //         Assert
         Assertions.assertEquals(expected, actual);
+    }
+
+//    Negative test
+    @Test
+    public void test_getStudentById_studentDoesNotExist() throws SQLException, StudentNotFoundException {
+//        Arrange
+        StudentDao mockDao = mock(StudentDao.class);
+
+        StudentService studentService = new StudentService(mockDao);
+
+//        Act + Assert
+//        The test case will pass if we encounter StudentNotFound exception
+        Assertions.assertThrows(StudentNotFoundException.class,()->{
+            studentService.getStudentById("10");
+        });
+    }
+
+//    Negative test
+    @Test
+    public void test_getStudentById_badRequest() throws SQLException, StudentNotFoundException {
+//        Arrange
+        StudentDao mockDao = mock(StudentDao.class);
+
+        StudentService studentService = new StudentService(mockDao);
+
+//        Act
+        try {
+            studentService.getStudentById("abc");
+            fail(); // We only reach this line if no exception is caught
+        } catch (IllegalArgumentException e) {
+            String expectedMessage = "Student id must be a valid integer only.";
+            String actualMessage = e.getMessage();
+//        Assert
+            Assertions.assertEquals(expectedMessage, actualMessage);
+        }
+    }
+
+    @Test
+    public void test_getStudentById_sqlExceptionFromDao() throws SQLException {
+//        Arrange
+        StudentDao mockDao = mock(StudentDao.class);
+
+        when(mockDao.getStudentById(anyInt())).thenThrow(SQLException.class);
+
+        StudentService studentService = new StudentService(mockDao);
+
+//        Act + Assert
+        Assertions.assertThrows(SQLException.class, () ->{
+            studentService.getStudentById("5");
+        });
+
+
     }
 }
