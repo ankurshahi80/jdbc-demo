@@ -15,6 +15,10 @@ public class StudentService {
         this.studentDao = new StudentDao();
     }
 
+    public StudentService(StudentDao mockDao){
+        this.studentDao = mockDao;
+    }
+
     public List<Student> getAllStudents() throws SQLException {
         return this.studentDao.getAllStudents();
     }
