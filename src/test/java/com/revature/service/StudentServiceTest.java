@@ -112,4 +112,25 @@ public class StudentServiceTest {
 
 
     }
+
+    @Test
+    public void test_addStudent_positiveTest() throws SQLException {
+
+        //      Arrange
+        StudentDao mockDao = mock(StudentDao.class);
+
+        Student studentToAdd = new Student(0,"John","Doe",25);
+        when(mockDao.addStudent(eq(studentToAdd)))
+                .thenReturn(new Student(10,"John","Doe",25 ));
+
+        StudentService studentService = new StudentService(mockDao);
+
+        //        Act
+        Student newStudent = studentService.addStudent (studentToAdd);
+
+        //      Assert
+        Assertions.assertEquals(studentToAdd.getFirstName(),newStudent.getFirstName());
+        Assertions.assertEquals(studentToAdd.getLastName(),newStudent.getLastName());
+        Assertions.assertEquals(studentToAdd.getAge(), newStudent.getAge());
+    }
 }

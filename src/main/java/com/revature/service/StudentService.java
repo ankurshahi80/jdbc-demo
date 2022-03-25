@@ -71,7 +71,7 @@ public class StudentService {
         }
     }
 
-    public void validateStudentInformation(Student s){
+    private void validateStudentInformation(Student s){
         s.setFirstName(s.getFirstName().trim());
         s.setLastName(s.getLastName().trim());
 
