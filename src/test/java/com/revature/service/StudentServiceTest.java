@@ -126,11 +126,67 @@ public class StudentServiceTest {
         StudentService studentService = new StudentService(mockDao);
 
         //        Act
-        Student newStudent = studentService.addStudent (studentToAdd);
+        Student actual = studentService.addStudent (studentToAdd);
 
         //      Assert
-        Assertions.assertEquals(studentToAdd.getFirstName(),newStudent.getFirstName());
-        Assertions.assertEquals(studentToAdd.getLastName(),newStudent.getLastName());
-        Assertions.assertEquals(studentToAdd.getAge(), newStudent.getAge());
+        Student expected = new Student(10,"John","Doe",25 );
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void test_addStudent_positiveWithLeadingAndTrailingFirstAndLastNames() throws SQLException {
+        //        Arrange
+        StudentDao mockDao = mock(StudentDao.class);
+
+        Student studentToAdd = new Student(0,"John","Doe",25);
+        when(mockDao.addStudent(eq(studentToAdd)))
+                .thenReturn(new Student(10,"John","Doe",25 ));
+
+        StudentService studentService = new StudentService(mockDao);
+
+        //        Act
+        Student actual = studentService.addStudent (
+                new Student(0,"   John   ","   Doe    ",25 ));
+
+        //        Assert
+        Student expected = new Student(10,"John","Doe",25 );
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void test_addStudent_nonAlphabeticalCharactersInFirstName() throws SQLException {
+
+        //          Arrange
+        StudentDao mockDao = mock(StudentDao.class);
+        StudentService studentService = new StudentService(mockDao);
+
+        //          Act + Assert
+        Assertions.assertThrows(IllegalArgumentException.class, ()->{
+            studentService.addStudent(new Student(0,"John123", "Doe" ,24));
+        });
+    }
+
+    @Test
+    public void test_addStudent_nonAlphabeticalCharactersInLastName(){
+        //          Arrange
+        StudentDao mockDao = mock(StudentDao.class);
+        StudentService studentService = new StudentService(mockDao);
+
+        //          Act + Assert
+        Assertions.assertThrows(IllegalArgumentException.class, ()->{
+            studentService.addStudent(new Student(0,"John", "Doe123" ,24));
+        });
+    }
+
+    @Test
+    public void test_addStudent_negativeAge(){
+        // Arrange
+        StudentDao mockDao = mock(StudentDao.class);
+        StudentService studentService = new StudentService(mockDao);
+
+        //        Act + Assert
+        Assertions.assertThrows(IllegalArgumentException.class, ()->{
+            studentService.addStudent((new Student(0, "John", "Doe",3)));
+        });
     }
 }
